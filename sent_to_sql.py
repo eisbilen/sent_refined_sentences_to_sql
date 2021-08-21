@@ -14,15 +14,19 @@ connection = sqlite3.connect("/data/lingomooAPP.db")
 cursor = connection.cursor()
 
 command1 = """CREATE TABLE IF NOT EXISTS
-sentences(sentence_id INTEGER PRIMARY KEY, sentence TEXT, sentence_length INTEGER, difficulty_score FLOAT)"""
+sentences(sentence_id INTEGER PRIMARY KEY, date_scrapped TEXT, article_tag TEXT, article_url TEXT, website TEXT, sentence TEXT, sentence_length INTEGER, difficulty_score FLOAT)"""
 
 cursor.execute(command1)
 
 # reads from the JSON file to transfer the news articles into the SQL database
-with open('/data/articles_2021-08-11-18-40-24.json') as json_file:
+with open('/data/articles_2021-08-21-21-52-09.json') as json_file:
     data = json.load(json_file)
 
     for l in data:
+        date_scrapped = l['datetime']
+        article_tag = l['tag']
+        article_url = l['link']
+        website = l['website']
 
         for sentence_article in l['article']:
             sentence = sentence_article
@@ -31,8 +35,8 @@ with open('/data/articles_2021-08-11-18-40-24.json') as json_file:
 
             # only adding the sentences with the word count between 7 and 15
             if sentence_length > 7 and sentence_length < 15:
-                cursor.execute("INSERT INTO sentences (sentence, sentence_length, difficulty_score) VALUES (?, ?, ?)",
-                   (sentence, sentence_length, difficulty_score))
+                cursor.execute("INSERT INTO sentences (date_scrapped, article_tag, article_url, website, sentence, sentence_length, difficulty_score) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                   (date_scrapped, article_tag, article_url, website, sentence, sentence_length, difficulty_score))
                 connection.commit()
 
 # deletes the dublicate lines containing the same sentece
