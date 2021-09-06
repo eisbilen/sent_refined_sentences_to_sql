@@ -1,12 +1,9 @@
 import sqlite3
 import json
 import re
-
 import time
-
 import shutil
 import os
-
 
 from watchdog.observers import Observer
 from watchdog.events import PatternMatchingEventHandler
@@ -41,7 +38,9 @@ def write_to_sql(filename):
             website = l['website']
 
             for sentence_article in l['article']:
-                sentence = sentence_article
+                sentence = sentence_article.replace("READ MORE:", "")
+                sentence = sentence.replace('"', '')
+                
                 sentence_length = sentence_length_calc(remove_puct(sentence_article))
                 difficulty_score = 0
                 print(sentence)
@@ -57,8 +56,6 @@ def write_to_sql(filename):
     cursor.close()
 
     shutil.move(filename, "/data/archive/json/" + os.path.basename(filename))
-
-
 
 if __name__ == "__main__":
     patterns = ["*.json"]
@@ -77,8 +74,8 @@ if __name__ == "__main__":
     go_recursively = True
     my_observer = Observer()
     my_observer.schedule(my_event_handler, path, recursive=go_recursively)
-
     my_observer.start()
+
     try:
         while True:
             time.sleep(1)
