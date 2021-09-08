@@ -48,7 +48,7 @@ def write_to_sql(filename):
                 # only adding the sentences with the word count between 7 and 15
                 if sentence_length > 7 and sentence_length < 15:
                     cursor.execute("INSERT INTO sentences (date_scrapped, article_tag, article_url, article_image_src, article_image_basename, website, sentence, sentence_length, difficulty_score) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                    (date_scrapped, article_tag, article_url, article_image_src, website, sentence, sentence_length, difficulty_score))
+                    (date_scrapped, article_tag, article_url, article_image_src, article_image_basename, website, sentence, sentence_length, difficulty_score))
                     connection.commit()
 
     # deletes the dublicate lines containing the same sentece
