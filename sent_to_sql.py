@@ -22,7 +22,7 @@ def write_to_sql(filename):
     cursor = connection.cursor()
 
     command1 = """CREATE TABLE IF NOT EXISTS
-    sentences(sentence_id INTEGER PRIMARY KEY, date_scrapped TEXT, article_tag TEXT, article_url TEXT, article_image_src TEXT, website TEXT, sentence TEXT, sentence_length INTEGER, difficulty_score FLOAT)"""
+    sentences(sentence_id INTEGER PRIMARY KEY, date_scrapped TEXT, article_tag TEXT, article_url TEXT, article_image_src TEXT, article_image_basename TEXT, website TEXT, sentence TEXT, sentence_length INTEGER, difficulty_score FLOAT)"""
 
     cursor.execute(command1)
 
@@ -35,6 +35,7 @@ def write_to_sql(filename):
             article_tag = l['tag']
             article_url = l['article_url']
             article_image_src = l['article_image_src']
+            article_image_basename = l['article_image_basename']
             website = l['website']
 
             for sentence_article in l['article']:
@@ -46,7 +47,7 @@ def write_to_sql(filename):
                 print(sentence)
                 # only adding the sentences with the word count between 7 and 15
                 if sentence_length > 7 and sentence_length < 15:
-                    cursor.execute("INSERT INTO sentences (date_scrapped, article_tag, article_url, article_image_src, website, sentence, sentence_length, difficulty_score) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                    cursor.execute("INSERT INTO sentences (date_scrapped, article_tag, article_url, article_image_src, article_image_basename, website, sentence, sentence_length, difficulty_score) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
                     (date_scrapped, article_tag, article_url, article_image_src, website, sentence, sentence_length, difficulty_score))
                     connection.commit()
 
